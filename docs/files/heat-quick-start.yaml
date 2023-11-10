@@ -1,0 +1,167 @@
+heat_template_version: wallaby
+
+parameter_groups:
+  - label: Basic Configuration
+    description: Basic resource and network settings
+    parameters:
+      - instance_description
+      - network_cidr
+      - instance_image
+      - instance_flavor
+      - volume_size
+      - public_key
+      - open_http
+
+parameters:
+  network_cidr:
+    default: '192.168.0.0/24'
+    type: string
+    label: Сеть
+    description: CIDR для подсети
+
+  instance_image:
+    type: string
+    label: Операционная Система
+    constraints:
+      - custom_constraint: glance.image
+
+  public_key:
+    type: string
+    label: Публичный Ключ SSH
+    description: |
+      Ключ, по которому заходить в виртуалочку.
+      Начинается на ssh-ed25519 AAAAA...
+    constraints:
+    - allowed_pattern: '^(ssh-ed25519|ssh-ed25519-cert-v01@openssh\.com|sk-ssh-ed25519@openssh\.com|sk-ssh-ed25519-cert-v01@openssh\.com|ecdsa-sha2-nistp256|ecdsa-sha2-nistp256-cert-v01@openssh\.com|ecdsa-sha2-nistp384|ecdsa-sha2-nistp384-cert-v01@openssh\.com|ecdsa-sha2-nistp521|ecdsa-sha2-nistp521-cert-v01@openssh\.com|sk-ecdsa-sha2-nistp256@openssh\.com|sk-ecdsa-sha2-nistp256-cert-v01@openssh\.com|ssh-dss|ssh-dss-cert-v01@openssh\.com|ssh-rsa|ssh-rsa-cert-v01@openssh\.com) [A-Za-z0-9+/]+={0,3}( [^\r\n]*)?$'
+      description: SSH public key must start with ssh-rsa, ssh-dss, ecdsa-sha2-nistp256, or ssh-ed25519 followed by a valid base64 string.
+
+  instance_flavor:
+    type: string
+    label: Размер
+    constraints:
+    - allowed_values:
+        - 4 vCPU, 512MB RAM
+        - 6 vCPU, 1GB RAM
+        - 8 vCPU, 2GB RAM
+        - 10 vCPU, 4GB RAM
+
+  volume_size:
+    type: number
+    label: Диск, GB
+    description: Размер диска для виртуалки
+    default: 10
+
+  instance_description:
+    type: string
+    label: Описание виртуалки
+    description: Для чего виртуалка?
+
+  open_http:
+    type: boolean
+    default: False
+    label: Настроить фаерволл для HTTP?
+    description: Откроет порты 80 и 443
+
+conditions:
+  open_http_cond:
+    get_param: open_http
+
+resources:
+  private_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: "OS::stack_name" }
+
+  private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network: { get_resource: private_network }
+      cidr: { get_param: network_cidr }
+
+  router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info:
+        network: public
+      name: { get_param: "OS::stack_name" }
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router }
+      subnet: { get_resource: private_subnet }
+
+  secgroup:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: { get_param: "OS::stack_name" }
+      rules:
+        if:
+        - "open_http_cond"
+        - - protocol: icmp
+          - protocol: tcp
+            port_range_min: 22
+            port_range_max: 22
+          - protocol: tcp
+            port_range_min: 80
+            port_range_max: 80
+          - protocol: tcp
+            port_range_min: 443
+            port_range_max: 443
+        - - protocol: icmp
+          - protocol: tcp
+            port_range_min: 22
+            port_range_max: 22
+
+  cinder_volume:
+    type: OS::Cinder::Volume
+    properties:
+      size: { get_param: volume_size }
+
+  instance_keypair:
+    type: OS::Nova::KeyPair
+    properties:
+      name: { get_param: "OS::stack_name" }
+      public_key: { get_param: public_key }
+
+  instance:
+    type: OS::Nova::Server
+    properties:
+      name: { get_param: "OS::stack_name" }
+      image: { get_param: instance_image }
+      flavor:
+        str_replace:
+          template: { get_param: instance_flavor }
+          params:
+            "4 vCPU, 512MB RAM": "m2s.micro"
+            "6 vCPU, 1GB RAM": "m2s.small"
+            "8 vCPU, 2GB RAM": "m2s.medium"
+            "10 vCPU, 4GB RAM": "m2s.large"
+
+      key_name: { get_resource: instance_keypair }
+      networks:
+        - network: { get_resource: private_network }
+      security_groups:
+        - { get_resource: secgroup }
+      block_device_mapping:
+        - device_name: vda
+          volume_id: { get_resource: cinder_volume }
+      metadata:
+        description: { get_param: instance_description }
+
+  floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: public
+
+  associate_floating_ip:
+    type: OS::Neutron::FloatingIPAssociation
+    properties:
+      floatingip_id: { get_resource: floating_ip }
+      port_id: {get_attr: [instance, addresses, { get_resource: private_network }, 0, port]}
+
+outputs:
+  instance_floating_ip:
+    label: Floating IP
+    description: IP виртуалочки
+    value: { get_attr: [floating_ip, floating_ip_address] }
