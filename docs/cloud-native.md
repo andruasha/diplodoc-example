@@ -29,14 +29,9 @@ Ansible, Terraform, openstacksdk, Gophercloud и остальные.
 
 Скачать свой **clouds.yaml** можно из гуев. Для этого в ``Identity / Application Credentials`` создай **Application Credential** и скачай клаудс в директорию ``~/.config/openstack/clouds.yaml``.
 
-.. note::
-
-    | При создании **Application Credentials** нельзя выбирать только роль ``member``.
-    | Поэтому или не выбирай роли или выбери все сразу.
-
-.. note::
-
-    | **openstack-cli** ищет ``clouds.yaml`` сначала в ``$PWD``, а затем в ``~/.config/openstack/``.
+> При создании **Application Credentials** нельзя выбирать только роль ``member``.
+> Поэтому или не выбирай роли или выбери все сразу.
+> **openstack-cli** ищет ``clouds.yaml`` сначала в ``$PWD``, а затем в ``~/.config/openstack/``.
 
 В clouds.yaml можно хранить креды от нескольких проектов. Консольные проги
 выбирают какой клауд юзать для авторизации по переменной енва ``OS_CLOUD``.
