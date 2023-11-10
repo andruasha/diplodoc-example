@@ -1,5 +1,6 @@
 # Cloud Native
 
+
 ## OpenStack CLI
 
 У OpenStack есть свое консольное приложение, через которое можно работать со
@@ -22,6 +23,7 @@
 авторизации. Это можно сделать через env переменные ``OS_*`` или через файл
 ``clouds.yaml``.
 
+
 ### Доступ в API по clouds.yaml
 
 Клауды надо настраивать для всех приложений, которые ходят в апи опенстака.
@@ -31,15 +33,14 @@ Ansible, Terraform, openstacksdk, Gophercloud и остальные.
 
 > При создании **Application Credentials** нельзя выбирать только роль ``member``.
 > Поэтому или не выбирай роли или выбери все сразу.
-> **openstack-cli** ищет ``clouds.yaml`` сначала в ``$PWD``, а затем в ``~/.config/openstack/``.
 
+**openstack-cli** ищет ``clouds.yaml`` сначала в ``$PWD``, а затем в ``~/.config/openstack/``.
 В clouds.yaml можно хранить креды от нескольких проектов. Консольные проги
 выбирают какой клауд юзать для авторизации по переменной енва ``OS_CLOUD``.
 Например, для такого клаудса выбрать проект можно через ``export
 OS_CLOUD=19106`` или ``export OS_CLOUD=370``.
 
-.. code-block:: yaml
-
+``` yaml
    clouds:
      19106:
        auth:
@@ -57,11 +58,11 @@ OS_CLOUD=19106`` или ``export OS_CLOUD=370``.
        region_name: "MIEM"
        interface: "public"
        identity_api_version: 3
+```
 
 Затестить можно командой ``openstack token issue`` например. Вывод должен выглядеть так:
 
-.. code-block:: none
-
+``` none
    $ OS_CLOUD=mekstack openstack token issue
    +------------+-------------------------------------------+
    | Field      | Value                                     |
@@ -71,23 +72,20 @@ OS_CLOUD=19106`` или ``export OS_CLOUD=370``.
    | project_id | 01b8eb750e504914ad478e2451043f43          |
    | user_id    | ec63c92a5b324c9faf43cd1d0a44b428          |
    +------------+-------------------------------------------+
+```
 
---------------
-Pets vs Cattle
---------------
+
+## Pets vs Cattle
 
 В предыдущем IaaS виртуальные машины были как *домашние животные* -- с ними
 нужно было действовать аккуратно, в случае поломки -- обращаться за помощью и
 вручную восстанавливать.
 
-Промышленный подход к инфраструктуре называется `Cloud Native
-<https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition>`_
+Промышленный подход к инфраструктуре называется [Cloud Native](https://learn.microsoft.com/en-us/dotnet/architecture/cloud-native/definition)
 и рассматривает виртуальные машины как *скот* -- архитектура приложения
 рассчитывает на то, что рано или поздно виртуальные машины упадут. Поэтому
 архитектура поддерживает редеплой сломанной инфраструктуры при помощи таких
 инструментов, как Ansible, Terraform, cloud-config.
-
-
 
 Servers or server pairs that are treated as indispensable or unique systems that
 can never be down. Typically they are manually built, managed, and “hand fed”.
@@ -109,16 +107,12 @@ everything, the ubiquitous HA pair in the enterprise datacenter, is not enough.
 What is required is assuming that failures can and will happen. That every
 server, every component is able to fail without impacting the system.
 
-`<https://cloudscaling.com/blog/cloud-computing/the-history-of-pets-vs-cattle/>`_
+https://cloudscaling.com/blog/cloud-computing/the-history-of-pets-vs-cattle/
 
-.. _terraform:
 
----------
-Terraform
----------
+## Terraform
 
-Terraform -- инструмент для управления инфраструктурой по технологии `IaC
-<https://en.wikipedia.org/wiki/Infrastructure_as_code>`_ с открытым исходным
+Terraform -- инструмент для управления инфраструктурой по технологии [IaC](https://en.wikipedia.org/wiki/Infrastructure_as_code) с открытым исходным
 кодом, позволяющий безопасно и нативно создавать и изменять инфраструктуру.
 
 Терраформ нас не любит поэтому запретил доступ к своим серверам. Но у нас
@@ -126,7 +120,7 @@ Terraform -- инструмент для управления инфрастру
 
 Для того чтобы ими воспользоваться нужно создать файл ``~/.terraformrc`` с таким содержимым
 
-.. code-block::
+``` terraform
 
     provider_installation {
       network_mirror {
@@ -137,20 +131,21 @@ Terraform -- инструмент для управления инфрастру
         exclude = ["registry.terraform.io/*/*"]
       }
     }
+```
 
 После этого ``terraform init`` будет работать
 
 Документация terraform тоже заблочена, но и на неё нашлось зеркало:
-`<https://docs.comcloud.xyz/providers/terraform-provider-openstack/openstack>`_
 
--------
-Ansible
--------
+https://docs.comcloud.xyz/providers/terraform-provider-openstack/openstack
+
+
+## Ansible
 
 Ansible -- YAML фронтенд к питону, чтобы выполнять почти идемпотентные команды
 на серверах по ссш.
 
-------------
-Miroservices
-------------
+
+## Miroservices
+
 TODO
