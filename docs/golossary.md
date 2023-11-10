@@ -6,8 +6,8 @@
 In OpenStack, we refer to provisioned compute nodes as **instances** and not
 **virtual machines**. Although this might seem like a matter of semantics, it's
 a useful device for a few reasons. The first reason is that it describes the
-deployment mechanism; all compute in OpenStack is the instantiation of a [glance](glance.md)
-image with a specified hardware template, the [flavor](flavor.md).
+deployment mechanism; all compute in OpenStack is the instantiation of a [glance](#glance)
+image with a specified hardware template, the [flavor](#flavor).
 
 The second reason that the term instance is useful is that virtual machines in
 OpenStack do not typically have the same life cycle as they do in traditional
