@@ -44,121 +44,113 @@
    Создай роутер в Project -> Network -> Routers  
    В ``External Network`` должна стоять **public** сеть.
 
-   ![13-lore](images/l3-lore.png){:width="500"}
+   ![l3-lore](images/l3-lore.png)
 
 5. Теперь твою подсеть нужно подключить к новому роутеру.
 
    Network -> Routers -> Тык на свой Router -> Interfaces -> Add Interface -> Выбираешь свою подсеть.  
    Произошла коммутация.
 
-~~~~~~~~~~~~~~~~~~
-Настройка Секгрупп
-~~~~~~~~~~~~~~~~~~
 
-| Дальше нужно настроить фаервол, потому что по дефолту он запрещает весь входящий траффик.
-| Фаервол в опенстаке называется :ref:`security-group`.
+### Настройка Секгрупп
+
+Дальше нужно настроить фаервол, потому что по дефолту он запрещает весь входящий траффик.  
+Фаервол в опенстаке называется [Security group](#security-group).
 
 Включи ICMP (это ping) и SSH в **default** секгруппе.
 
-#. Project -> Network -> Security Groups -> default -> Manage Rules
+1. Project -> Network -> Security Groups -> default -> Manage Rules
 
-#. Add Rule -> All ICMP -> Add
+2. Add Rule -> All ICMP -> Add
 
-#. Add Rule -> SSH -> Add
+3. Add Rule -> SSH -> Add
 
-~~~~~~~~~~~~~~~
-Запуск Инстанса
-~~~~~~~~~~~~~~~
 
-:ref:`instance` это твоя виртуалочка
+### Запуск Инстанса
 
-#. Compute -> Instances -> Launch Instance
+[Инстанс](#instance) это твоя виртуалочка
 
-#. В Source Выбери имадж (это как iso, но без ручной установки)
+1. Compute -> Instances -> Launch Instance
 
-#. | Там же выбери прикреплять ли дополнительный СХДшный диск к виртуалке кнопкой Create New Volume.
+2. В Source Выбери имадж (это как iso, но без ручной установки)
+
+3. Там же выбери прикреплять ли дополнительный СХДшный диск к виртуалке кнопкой Create New Volume.  
    Если не создавать, то будет только локальный диск 10-20 гигов с гипера, но он быстрее.
 
-#. Выбери :ref:`flavor`
+4. Выбери [Flavour](#flavor)
 
-#. В Networks выбери свою новую сеть
+5. В Networks выбери свою новую сеть
 
-#. Security Groups пусть остаются на **default**
+6. Security Groups пусть остаются на **default**
 
-#. В Key Pair добавь свой публичный SSH ключ
+7. В Key Pair добавь свой публичный SSH ключ
 
-#. Всё, запускай инстанс
+8. Всё, запускай инстанс
 
-| Инстанс сейчас в твоей приватной сетке, чтобы до него достучаться нужно прицепить к инстансу :ref:`fip`.
+Инстанс сейчас в твоей приватной сетке, чтобы до него достучаться нужно прицепить к инстансу [Fip](#fip).  
 Floating IP выделяются из 172.18.218.0/23, к этой сетке есть доступ из под впн.
 
-#. Project -> Network -> Floating IPs -> Alocate IP To Project
+1. Project -> Network -> Floating IPs -> Alocate IP To Project
 
-#. Project -> Network -> Floating IPs -> Associate
+2. Project -> Network -> Floating IPs -> Associate
 
---------------------------------------------------
-`vpnaas.mekstack.ru <https://vpnaas.mekstack.ru>`_
---------------------------------------------------
+
+## [vpnaas.mekstack.ru](https://vpnaas.mekstack.ru)
 
 Сгенерь приватный и публичный ключ, вставь в сайт публичный, а свой конфиг приватный и готово.
 
-.. code::
-
+``` bash
     wg genkey | tee wg.key | wg pubkey
     sudo wg-quick up ./wg0.conf
     sudo wg-quick down ./wg0.conf
+```
 
-На Arch Wiki `написано <https://wiki.archlinux.org/title/WireGuard>`_ про Wireguard поподробнее.
+На Arch Wiki [написано](https://wiki.archlinux.org/title/WireGuard) про Wireguard поподробнее.
 
-~~~~~~~~~~~
-Проверь впн
-~~~~~~~~~~~
 
-.. code::
+### Проверь впн
 
+``` bash
     ping 172.18.218.2
+```
 
-| Если работает, то ссшься в свой сервер и делай что хочешь.
-| В Ubuntu юзер ``ubuntu``, в Arch юзер ``arch``, в Debian юзер ``debian``.
-| Если не работает, то пиши в цулип.
+Если работает, то ссшься в свой сервер и делай что хочешь.  
+В Ubuntu юзер ``ubuntu``, в Arch юзер ``arch``, в Debian юзер ``debian``.  
+Если не работает, то пиши в цулип.
 
--------------------
-Публикация сайтиков
--------------------
 
-| Запустил сайтик на виртуалочке и хочешь чтобы люди в интернете тоже молги им полюбоваться?
+## Публикация сайтиков
+
+Запустил сайтик на виртуалочке и хочешь чтобы люди в интернете тоже молги им полюбоваться?
 Настрой форвард траффика на него
 
-#. Сделай A запись для своего домена на публичный адрес мекстака: 194.190.152.81
+1. Сделай A запись для своего домена на публичный адрес мекстака: 194.190.152.81
 
-#. DNS -> Zones -> Create Zone и указываешь там свой домен
+2. DNS -> Zones -> Create Zone и указываешь там свой домен
 
-#. Тык на зону -> Create Recordset -> В поле Record впиши Floating IP инстанса
+3. Тык на зону -> Create Recordset -> В поле Record впиши Floating IP инстанса
 
-#. В :ref:`security-group` инстанса разреши ingress на 80 и 443 порты
+4. В [Security group](#security-group) инстанса разреши ingress на 80 и 443 порты
 
-#. Теперь все интернет HTTP(S) пакеты, приходящие на 194.190.152.81 с ``Host/SNI
+5. Теперь все интернет HTTP(S) пакеты, приходящие на 194.190.152.81 с ``Host/SNI
    == {{ твой домен }}`` будут отправляться на твой инстанс
 
-.. note::
-
-    | Если у тебя нет домена, то первый шаг можно попросить сделать кого-нибудь с доменом
-    Или купи свой, они по сто рублей на год стоят
+> Если у тебя нет домена, то первый шаг можно попросить сделать кого-нибудь с доменом
+> Или купи свой, они по сто рублей на год стоят
 
 
-Для TLS юзай `сертбота <https://certbot.eff.org/lets-encrypt/>`_
+Для TLS юзай [сертбота](https://certbot.eff.org/lets-encrypt/)
 
-Как это работает? Да `вот так
-<https://github.com/mekstack/mekstack/blob/master/infra/sneedaas/user-data.yaml>`_.
+Как это работает? Да [вот так](https://github.com/mekstack/mekstack/blob/master/infra/sneedaas/user-data.yaml).
+
 На картинке понятней.
 
 .. image:: images/sneedaas.png
   :width: 800
 
------------
-Продолжение
------------
+
+## Продолжение
 
 Все еще недостаточно мекстак лора?
 
-В :doc:`cloud-native` написано про использование Terraform, Ansible, API, openstack-cli.
+В [Cloud native](cloud-native.md) написано про использование Terraform, Ansible, API, openstack-cli.
