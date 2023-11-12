@@ -12,6 +12,6 @@
    В Ubuntu юзер ``ubuntu``, в Arch юзер ``arch``, в Debian юзер ``debian``.
    Конфиг впна возьми из [vpnaas.mekstack.ru](https://vpnaas.mekstack.ru)
 
-6. Пока мы пишем NATaaS, публикация сайтов на виртуалках доступна только по [quick start](quick-start).
+6. Пока мы пишем NATaaS, публикация сайтов на виртуалках доступна только по [quick start](quick-start.md).
 
 > В окне запуска стека поле **Password for user** это не пароль для виртуалки.
