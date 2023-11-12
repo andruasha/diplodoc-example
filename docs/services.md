@@ -1,83 +1,83 @@
 # Services
 
-## <a name="sneedaas"> SNEEDaaS </a>
+## SNEEDaaS {#sneedaas}
 
 todo
 
 
-## <a name="vpnaas"> VPNaaS </a>
+## VPNaaS {#vpnaas}
 
 todo
 
 
-## <a name="dnosha"> DNoS-HA </a>
+## DNoS-HA {#dnosha}
 
 todo
 
 
-## <a name="magnum"> Managed K8s </a>
+## Managed K8s {#magnum}
 
 todo
 
 
-## <a name="custom-linux-images"> Custom Linux Images </a>
+## Custom Linux Images {#custom-linux-images}
 
 todo
 
 
-## <a name="monitoring"> Monitoring </a>
+## Monitoring {#monitoring}
 
 TODO
 
 
-## <a name="local-mirrors"> Local Mirrors </a>
+## Local Mirrors {#local-mirrors}
 
 TODO
 
 
-### <a name="pip-mirror"> PIP mirror </a>
+### PIP mirror {#pip-mirror}
 
 TODO
 
 
-### <a name="arch-mirror"> Arch mirror </a>
+### Arch mirror {#arch-mirror}
 
 TODO
 
 
-### <a name="ubuntu-mirror"> Ubuntu mirror </a>
+### Ubuntu mirror {#ubuntu-mirror}
 
 TODO
 
 
-### <a name="docker-mirror"> Docker mirror and registry </a>
+### Docker mirror and registry {#docker-mirror}
 
 TODO
 
 
-## <a name="lbaas"> LBaaS </a>
+## LBaaS {#lbaas}
 
 дальше лень даже todo писать
 
 we are hiring!
 
 
-## <a name="saas"> SaaS </a>
+## SaaS {#saas}
 
 
-## <a name="paas"> PaaS </a>
+## PaaS {#paas}
 
 
-## <a name="glance"> Glance </a>
+## Glance {#glance}
 
 
-## <a name="ddi"> DDI </a>
+## DDI {#ddi}
 
 
-### <a name="dns"> DNS </a>
+### DNS {#dns}
 
 
-### <a name="dhcp"> DHCP </a>
+### DHCP {#dhcp}
 
 
-### <a name="ipam"> IPAM </a>
+### IPAM {#ipam}
