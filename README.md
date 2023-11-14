@@ -1,6 +1,6 @@
 # Documentation Template created by Diplodoc
           
-Features:
+Features: 
  
 - initial project structure
 - dev server with hot reload
