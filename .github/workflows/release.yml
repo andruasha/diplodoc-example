@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        uses: ./.github/actions
+        uses: ./.github/workflows/actions
         with:
           revision: "${{ github.sha }}"
           src-root: "./docs"
