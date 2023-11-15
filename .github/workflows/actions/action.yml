@@ -18,15 +18,8 @@ inputs:
     required: true
   src-root:
     default: "./"
-  lint-root:
-    default: "./_docs-lint"
   build-root:
     default: "./_docs-build"
-  stage:
-    default: "stable"
-  shared-storage-bucket:
-    default: false
-    type: boolean
 
 runs:
   using: composite
@@ -36,36 +29,15 @@ runs:
         node-version: 18
     - run: npm i @diplodoc/cli -g
       shell: bash
-    - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.lint-root }}
+    - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }}
       shell: bash
-    - name: build
-      run: |
-        yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} --output-format md --add-map-file --allow-custom-resources
-      shell: bash
-    - name: Set BUCKET and PREFIX
-      shell: bash
-      run: |
-        if [[ "${{ inputs.storage-bucket }}" =~ "/" ]]; then
-          echo "Detected complex bucket name"
-        
-          COMPLEX="${{ inputs.storage-bucket }}"
-          PARTS=(${COMPLEX//\// })
-          PREFIX=${PARTS[@]:1}
-        
-          echo "BUCKET=${PARTS[0]}-${{ inputs.stage }}" >> $GITHUB_ENV
-          echo "PREFIX=${PREFIX// //}/rev/${{ inputs.revision }}" >> $GITHUB_ENV
-        else
-          echo "BUCKET=${{ inputs.storage-bucket }}-${{ inputs.stage }}" >> $GITHUB_ENV
-          echo "PREFIX=rev/${{ inputs.revision }}" >> $GITHUB_ENV
-        fi
-    - name: Upload S3
+    - name: Upload to S3
       shell: bash
       run: |
         yfm publish \
           -i "${{ inputs.build-root }}" \
           --endpoint "${{ inputs.storage-endpoint }}" \
           --region "${{ inputs.storage-region }}" \
-          --bucket "${{ env.BUCKET }}" \
-          --prefix "${{ env.PREFIX }}" \
+          --bucket "${{ inputs.storage-bucket }}" \
           --access-key-id "${{ inputs.storage-access-key-id }}" \
           --secret-access-key "${{ inputs.storage-secret-access-key }}"
