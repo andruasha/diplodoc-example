@@ -1,5 +1,6 @@
 # Admin Guides
 
+test
 В этой секции находится информация для администраторов облака.
 
 - [Репозиторий с конфигурацией Kolla, Kayobe и IaC инфраструктуры](https://github.com/mekstack/mekstack)
