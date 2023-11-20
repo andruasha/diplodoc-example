@@ -1,40 +1,20 @@
-# Documentation Template created by Diplodoc
+# Diplodoc
 
-Features:
+Все исходные файлы документации, подлежащие изменению лежат в `./docs/`
 
-- initial project structure
-- dev server with hot reload
-- codespaces support
-- vscode tutorial via code tours
-
-## Initial project structure
-
-Initiatl project structure with basic content can be found within your public github repo "diplodoc-example/docs" 
-
-## Usage
-
-### Run locally by cloning repo:
-
+Структура проекта имеет следующий вид:
 ```
-> git clone git@github.com:diplodoc-platform/documentation-template.git
-
-> cd documentation-template
-
-> npm start
-
-> listening on 0.0.0.0:8000
-
+mekstack/docs/docs
+|-- .yfm (Файл конфигурации проекта)
+|-- toc.yaml (Файл конфигурация боковой навигационной панели с оглавлением)
+|-- index.yaml (Скелет разводящей страницы)
+|-- docs (Файлы с контентом)
+    |-- faq.md
+    |-- how-to.md
+|-- images (Каталог с изображениями)
+    |-- image1.png
+    |-- image2.png
+|-- files (Каталог с файлами для переиспользования)
+    |-- faq_shared_block.md
 ```
-now you have development server with hot reload runing and serving built documentation on `0.0.0.0:8000`
 
-### github codespaces
-
-press Use this template -> Open in a codespace
-
-![open in a codespace](images/open-in-a-codespace.jpeg)
-
-wait for the development server startup
-
-enjoy developing documentation with html result preview in split view
-
-![codespaces project](images/codespaces-project.jpeg)
