@@ -48,20 +48,22 @@ runs:
           --access-key-id "${{ inputs.storage-access-key-id }}" \
           --secret-access-key "${{ inputs.storage-secret-access-key }}" \
           --prefix "${PREFIX}/"
+          
+    - name: Install AWS CLI
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+      shell: bash
 
-        # Получаем список папок в бакете
-        FOLDERS=$(aws s3 ls s3://"${{ inputs.storage-bucket }}"/"${PREFIX}"/ --recursive | awk -F'/' '{print $2}' | uniq)
+    - name: Configure AWS CLI
+      run: |
+        aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
+        aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
+        aws configure set default.region ${{ inputs.storage-region }}
+        aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
+      shell: bash
 
-        # Получаем список открытых pull requests
-        OPEN_PRS=$(gh pr list --json number,state -q "is:open" | jq -r '.[].number')
-
-        # Удаляем папки, которые не соответствуют открытым pull requests
-        for FOLDER in $FOLDERS; do
-          PR_NUMBER=$(echo $FOLDER | cut -d'-' -f2)
-          if [[ ! " $OPEN_PRS " =~ " $PR_NUMBER " ]]; then
-            aws s3 rm s3://"${{ inputs.storage-bucket }}"/"${PREFIX}"/"${FOLDER}" --recursive
-          fi
-        done
-
-        # Удаляем папку в Yandex.Cloud S3
-        yc s3 rm --recursive s3://"${{ inputs.storage-bucket }}/pr-18/"
+    - name: Delete PR-18 directory
+      run: aws s3 rm s3://${{ inputs.storage-bucket }}/pr-18 --recursive
+      shell: bash
