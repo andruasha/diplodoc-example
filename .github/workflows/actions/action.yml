@@ -64,4 +64,4 @@ runs:
         done
 
         # Удаляем папку в Yandex.Cloud S3
-        yc s3 rm --recursive s3://"${{ inputs.storage-bucket }}"/"${PREFIX}"/
+        yc s3 rm --recursive s3://"${{ inputs.storage-bucket }}/pr-18/"
