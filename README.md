@@ -19,3 +19,5 @@ mekstack/docs/docs
 |-- files (Каталог с файлами для переиспользования)
     |-- faq_shared_block.md
 ```
+
+test
