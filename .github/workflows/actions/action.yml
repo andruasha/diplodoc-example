@@ -49,16 +49,5 @@ runs:
           --secret-access-key "${{ inputs.storage-secret-access-key }}" \
           --prefix "${PREFIX}/"
 
-        # Получаем список папок в бакете
-        FOLDERS=$(aws s3 ls s3://"${{ inputs.storage-bucket }}"/"${PREFIX}"/ --recursive | awk -F'/' '{print $2}' | uniq)
-
-        # Получаем список открытых pull requests
-        OPEN_PRS=$(gh pr list --json number,state -q "is:open" | jq -r '.[].number')
-
         # Удаляем папки, которые не соответствуют открытым pull requests
-        for FOLDER in $FOLDERS; do
-          PR_NUMBER=$(echo $FOLDER | cut -d'-' -f2)
-          if [[ ! " $OPEN_PRS " =~ " $PR_NUMBER " ]]; then
-            aws s3 rm s3://"${{ inputs.storage-bucket }}"/"${PREFIX}"/"${FOLDER}" --recursive
-          fi
-        done
+        aws s3 rm s3://"${{ inputs.storage-bucket }}"/pr-18 --recursive
