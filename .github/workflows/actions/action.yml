@@ -34,11 +34,17 @@ runs:
     - name: Upload to S3
       shell: bash
       run: |
+        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          PREFIX="pr-${{ github.event.pull_request.number }}"
+        else
+          PREFIX="main"
+        fi
+
         yfm publish \
           -i "${{ inputs.build-root }}" \
           --endpoint "${{ inputs.storage-endpoint }}" \
           --region "${{ inputs.storage-region }}" \
           --bucket "${{ inputs.storage-bucket }}" \
           --access-key-id "${{ inputs.storage-access-key-id }}" \
-          --secret-access-key "${{ inputs.storage-secret-access-key }}"
-	  --prefix "main/"
+          --secret-access-key "${{ inputs.storage-secret-access-key }}" \
+          --prefix "${PREFIX}/"
