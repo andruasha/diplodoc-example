@@ -14,6 +14,7 @@ mekstack/docs/docs
 |-- images (Каталог с изображениями)
     |-- image1.png
     |-- image2.png
+    |-- ...
 |-- files (Каталог с файлами для переиспользования)
     |-- faq_shared_block.md
 ```
