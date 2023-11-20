@@ -50,4 +50,23 @@ runs:
           --prefix "${PREFIX}/"
 
         # Удаляем папки, которые не соответствуют открытым pull requests
-        aws s3 rm s3://"${{ inputs.storage-bucket }}"/pr-18 --recursive
+        echo "Removing folders in S3 bucket: ${PREFIX}"
+        
+        FOLDERS=$(aws s3 ls s3://"${{ inputs.storage-bucket }}"/"${PREFIX}"/ --recursive | awk -F'/' '{print $2}' | uniq)
+
+        # Выводим список папок для отладки
+        echo "Folders in S3 bucket: ${FOLDERS}"
+
+        OPEN_PRS=$(gh pr list --json number,state -q "is:open" | jq -r '.[].number')
+
+        # Выводим список открытых pull requests для отладки
+        echo "Open pull requests: ${OPEN_PRS}"
+
+        # Удаляем папки, которые не соответствуют открытым pull requests
+        for FOLDER in $FOLDERS; do
+          PR_NUMBER=$(echo $FOLDER | cut -d'-' -f2)
+          if [[ ! " $OPEN_PRS " =~ " $PR_NUMBER " ]]; then
+            echo "Deleting folder: ${FOLDER}"
+            aws s3 rm s3://"${{ inputs.storage-bucket }}"/"${PREFIX}"/"${FOLDER}" --recursive
+          fi
+        done
