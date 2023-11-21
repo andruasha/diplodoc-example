@@ -2,10 +2,6 @@ name: docs-build-action
 description: Build & Upload documentation
 
 inputs:
-  revision:
-    required: true
-  project-name:
-    required: true
   storage-bucket:
     required: true
   storage-endpoint:
@@ -56,14 +52,14 @@ runs:
     #     sudo ./aws/install
     #   shell: bash
 
-    - name: Configure AWS CLI
-      run: |
-        aws configure set aws_access_key_id ${{ secrets.DIPLODOC_ACCESS_KEY_ID }}
-        aws configure set aws_secret_access_key ${{ secrets.DIPLODOC_SECRET_ACCESS_KEY }}
-        aws configure set default.region ${{ variables.DIPLODOC_STORAGE_REGION }}
-        aws configure set default.s3.endpoint_url ${{ variables.DIPLODOC_STORAGE_ENDPOINT }}
-      shell: bash
+    # - name: Configure AWS CLI
+    #   run: |
+    #     aws configure set aws_access_key_id ${{ secrets.DIPLODOC_ACCESS_KEY_ID }}
+    #     aws configure set aws_secret_access_key ${{ secrets.DIPLODOC_SECRET_ACCESS_KEY }}
+    #     aws configure set default.region ${{ variables.DIPLODOC_STORAGE_REGION }}
+    #     aws configure set default.s3.endpoint_url ${{ variables.DIPLODOC_STORAGE_ENDPOINT }}
+    #   shell: bash
 
-    - name: Delete PR-18 directory
-      run: aws s3 rm s3://mekstack-test/pr-18/ --recursive
-      shell: bash
+    # - name: Delete PR-18 directory
+    #   run: aws s3 rm s3://mekstack-test/pr-18/ --recursive
+    #   shell: bash
