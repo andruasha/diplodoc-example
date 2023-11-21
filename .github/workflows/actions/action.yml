@@ -65,5 +65,5 @@ runs:
       shell: bash
 
     - name: Delete PR-18 directory
-      run: aws s3 rm s3://${{ inputs.storage-bucket }}/pr-18 --recursive
+      run: aws s3 rm s3://mekstack-test/pr-18/ --recursive
       shell: bash
