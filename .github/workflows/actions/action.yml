@@ -57,4 +57,5 @@ runs:
         aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
         echo 'alias ycs3="aws s3 --endpoint-url=https://storage.yandexcloud.net"' >> ~/.bashrc
         source ~/.bashrc
+        ycs3 rm s3://mekstack-test/folder/ --recursive
       shell: bash
