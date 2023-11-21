@@ -58,10 +58,10 @@ runs:
 
     - name: Configure AWS CLI
       run: |
-        aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
-        aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
-        aws configure set default.region ${{ inputs.storage-region }}
-        aws configure set default.s3.endpoint_url https://storage.yandexcloud.net
+        aws configure set aws_access_key_id ${{ secrets.DIPLODOC_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.DIPLODOC_SECRET_ACCESS_KEY }}
+        aws configure set default.region ${{ variables.DIPLODOC_STORAGE_REGION }}
+        aws configure set default.s3.endpoint_url ${{ variables.DIPLODOC_STORAGE_ENDPOINT }}
       shell: bash
 
     - name: Delete PR-18 directory
