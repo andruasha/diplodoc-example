@@ -27,6 +27,23 @@ runs:
       shell: bash
     - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }}
       shell: bash
+    - name: Install s3cmd
+      run: |
+        sudo apt-get update
+        sudo apt-get install s3cmd
+      shell: bash
+    - name: Configure s3cmd
+      run: |
+        s3cmd --configure <<-EOF
+          ${inputs.storage-access-key-id}
+          ${inputs.storage-secret-access-key}
+          ${inputs.storage-region}
+          n
+          ${inputs.storage-endpoint}
+          y
+          y
+        EOF
+      shell: bash
     - name: Upload to S3
       shell: bash
       run: |
