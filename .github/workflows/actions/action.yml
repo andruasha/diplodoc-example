@@ -20,7 +20,7 @@ inputs:
 runs:
   using: composite
   env:
-    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GH_TOKEN: ${{ github.token }}
   steps:
     - uses: actions/setup-node@v3
       with:
