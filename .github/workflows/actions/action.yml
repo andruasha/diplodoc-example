@@ -66,17 +66,17 @@ runs:
     #   env:
     #     GITHUB_TOKEN: ${{ inputs.github-token }}
     #   shell: bash
-    - name: Extract PR numbers from S3 bucket folders
-      run: |
-        aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
-        aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
-        aws configure set default.region ${{ inputs.storage-region }}
-        aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
-        all_objects=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }})
-        pr_folders=$(echo "$all_objects" | grep -oE 'pr-[0-9]+/' | sed 's|/$||')
-        if [ -z "$pr_folders" ]; then
-          echo "No PR folders found."
-        else
-          echo "PR Folders: ${pr_folders}"
-        fi
-      shell: bash
+- name: Extract PR numbers from S3 bucket folders
+  run: |
+    aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
+    aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
+    aws configure set default.region ${{ inputs.storage-region }}
+    aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
+    bucket_name="mekstack-test"
+    
+    import boto3
+    s3 = boto3.client('s3', endpoint_url='${{ inputs.storage-endpoint }}')
+    response = s3.list_objects(Bucket=bucket_name)
+    print(response)
+  shell: bash
+
