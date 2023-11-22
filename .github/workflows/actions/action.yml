@@ -59,14 +59,14 @@ runs:
         aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
         aws s3 rm s3://mekstack-test/folder/ --recursive --endpoint-url=${{ inputs.storage-endpoint }}
       shell: bash
-    - name: Remove unnecessary folders
-      run: |
-        FOLDERS=$(aws s3 ls s3://"${{ inputs.storage-bucket }}"/ --recursive --endpoint-url=${{ inputs.storage-endpoint }} | awk -F'/' '{print $2}' | uniq)
-        OPEN_PRS=$(gh pr list --json number,state -q "is:open" | jq -r '.[].number')
-        for FOLDER in $FOLDERS; do
-          PR_NUMBER=$(echo $FOLDER | cut -d'-' -f2)
-          if [[ ! " $OPEN_PRS " =~ " $PR_NUMBER " ]]; then
-            aws s3 rm s3://"${{ inputs.storage-bucket }}"/"${FOLDER}" --recursive --endpoint-url=${{ inputs.storage-endpoint }}
-          fi
-        done
-      shell: bash
+    # - name: Remove unnecessary folders
+    #   run: |
+    #     FOLDERS=$(aws s3 ls s3://"${{ inputs.storage-bucket }}"/ --recursive --endpoint-url=${{ inputs.storage-endpoint }} | awk -F'/' '{print $2}' | uniq)
+    #     OPEN_PRS=$(gh pr list --json number,state -q "is:open" | jq -r '.[].number')
+    #     for FOLDER in $FOLDERS; do
+    #       PR_NUMBER=$(echo $FOLDER | cut -d'-' -f2)
+    #       if [[ ! " $OPEN_PRS " =~ " $PR_NUMBER " ]]; then
+    #         aws s3 rm s3://"${{ inputs.storage-bucket }}"/"${FOLDER}" --recursive --endpoint-url=${{ inputs.storage-endpoint }}
+    #       fi
+    #     done
+    #   shell: bash
