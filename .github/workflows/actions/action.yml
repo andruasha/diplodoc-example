@@ -23,7 +23,7 @@ runs:
       - name: List pull requests
         run: gh pr list
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
     # - uses: actions/setup-node@v3
     #   with:
     #     node-version: 18
