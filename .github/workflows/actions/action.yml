@@ -79,4 +79,4 @@ runs:
         else
           echo "PR Folders: ${pr_folders}"
         fi
-      shell: bash 
+      shell: bash
