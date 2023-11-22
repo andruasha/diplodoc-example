@@ -20,8 +20,8 @@ inputs:
     default: "./_docs-build"
 
 runs:
-  # using: composite
-  # steps:
+  using: composite
+  steps:
   #   - uses: actions/setup-node@v3
   #     with:
   #       node-version: 18
