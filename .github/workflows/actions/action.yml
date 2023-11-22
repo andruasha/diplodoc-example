@@ -20,35 +20,35 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - run: npm i @diplodoc/cli -g
-      shell: bash
-    - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }}
-      shell: bash
-    - name: Install s3cmd
-      run: |
-        sudo apt-get update
-        sudo apt-get install s3cmd
-      shell: bash
-    - name: Upload to S3
-      shell: bash
-      run: |
-        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-          PREFIX="pr-${{ github.event.pull_request.number }}"
-        else
-          PREFIX="main"
-        fi
+    # - uses: actions/setup-node@v3
+    #   with:
+    #     node-version: 18
+    # - run: npm i @diplodoc/cli -g
+    #   shell: bash
+    # - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }}
+    #   shell: bash
+    # - name: Install s3cmd
+    #   run: |
+    #     sudo apt-get update
+    #     sudo apt-get install s3cmd
+    #   shell: bash
+    # - name: Upload to S3
+    #   shell: bash
+    #   run: |
+    #     if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+    #       PREFIX="pr-${{ github.event.pull_request.number }}"
+    #     else
+    #       PREFIX="main"
+    #     fi
 
-        yfm publish \
-          -i "${{ inputs.build-root }}" \
-          --endpoint "${{ inputs.storage-endpoint }}" \
-          --region "${{ inputs.storage-region }}" \
-          --bucket "${{ inputs.storage-bucket }}" \
-          --access-key-id "${{ inputs.storage-access-key-id }}" \
-          --secret-access-key "${{ inputs.storage-secret-access-key }}" \
-          --prefix "${PREFIX}/"
+    #     yfm publish \
+    #       -i "${{ inputs.build-root }}" \
+    #       --endpoint "${{ inputs.storage-endpoint }}" \
+    #       --region "${{ inputs.storage-region }}" \
+    #       --bucket "${{ inputs.storage-bucket }}" \
+    #       --access-key-id "${{ inputs.storage-access-key-id }}" \
+    #       --secret-access-key "${{ inputs.storage-secret-access-key }}" \
+    #       --prefix "${PREFIX}/"
     - name: Configure AWS CLI
       run: |
         aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
