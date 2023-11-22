@@ -22,11 +22,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Extract PR numbers from S3 bucket folders
-      run: |
-        folders=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }})  
-        echo "Folders: ${folders}"
-      shell: bash
   #   - uses: actions/setup-node@v3
   #     with:
   #       node-version: 18
@@ -71,3 +66,12 @@ runs:
     #   env:
     #     GITHUB_TOKEN: ${{ inputs.github-token }}
     #   shell: bash
+    - name: Extract PR numbers from S3 bucket folders
+      run: |
+        aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
+        aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
+        aws configure set default.region ${{ inputs.storage-region }}
+        aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
+        folders=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }})  
+        echo "Folders: ${folders}"
+      shell: bash
