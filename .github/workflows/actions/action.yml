@@ -76,7 +76,7 @@ runs:
         all_objects=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }})
 
         # Извлекаем только имена папок верхнего уровня
-        top_level_folders=$(echo "${all_objects}" | awk -F'/' '{print $2}' | sort -u)
-
-        echo "Folders: ${top_level_folders}"
+        folders=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }} | grep '/$' | awk '{print $NF}')
+    
+        echo "Folders: ${folders}"
       shell: bash
