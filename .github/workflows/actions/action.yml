@@ -49,14 +49,14 @@ runs:
           --access-key-id "${{ inputs.storage-access-key-id }}" \
           --secret-access-key "${{ inputs.storage-secret-access-key }}" \
           --prefix "${PREFIX}/"
-    # - name: Configure AWS CLI
-    #   run: |
-    #     aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
-    #     aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
-    #     aws configure set default.region ${{ inputs.storage-region }}
-    #     aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
-    #     aws s3 rm s3://mekstack-test/folder/ --recursive --endpoint-url=${{ inputs.storage-endpoint }}
-    #   shell: bash
+    - name: Configure AWS CLI
+      run: |
+        aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
+        aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
+        aws configure set default.region ${{ inputs.storage-region }}
+        aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
+        aws s3 rm s3://mekstack-test/folder/ --recursive --endpoint-url=${{ inputs.storage-endpoint }}
+      shell: bash
     # - name: Remove unnecessary folders
     #   run: |
     #     FOLDERS=$(aws s3 ls s3://"${{ inputs.storage-bucket }}"/ --recursive --endpoint-url=${{ inputs.storage-endpoint }} | awk -F'/' '{print $2}' | uniq)
