@@ -71,11 +71,6 @@ runs:
 
     - name: Extract PR numbers from S3 bucket folders
       run: |
-        folders=$(aws s3 ls s3://mekstack-test/folder/ --recursive --endpoint-url=${{ inputs.storage-endpoint }} | grep "/" | awk '{print $4}')
-        pr_numbers=()
-        for folder in $folders; do
-          pr_number=$(echo "$folder" | sed 's/pr-//')
-          pr_numbers+=("$pr_number")
-        done      
-        echo "PR numbers: ${pr_numbers[@]}"
+        folders=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }})  
+        echo "Folders: ${folders}"
       shell: bash
