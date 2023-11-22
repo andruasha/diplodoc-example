@@ -22,6 +22,30 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install awscli boto3
+
+    - name: Run Python script
+      run: python .github/workflows/scripts/main.py
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        STORAGE_BUCKET: ${{ inputs.storage-bucket }}
+        STORAGE_ENDPOINT: ${{ inputs.storage-endpoint }}
+        STORAGE_ACCESS_KEY_ID: ${{ inputs.storage-access-key-id }}
+        STORAGE_SECRET_ACCESS_KEY: ${{ inputs.storage-secret-access-key }}
+        STORAGE_REGION: ${{ inputs.storage-region }}
+        SRC_ROOT: ${{ inputs.src-root }}
+        BUILD_ROOT: ${{ inputs.build-root }}
   #   - uses: actions/setup-node@v3
   #     with:
   #       node-version: 18
@@ -72,11 +96,5 @@ runs:
     aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
     aws configure set default.region ${{ inputs.storage-region }}
     aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
-    bucket_name="mekstack-test"
-    
-    import boto3
-    s3 = boto3.client('s3', endpoint_url='${{ inputs.storage-endpoint }}')
-    response = s3.list_objects(Bucket=bucket_name)
-    print(response)
   shell: bash
 
