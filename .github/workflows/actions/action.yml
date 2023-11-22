@@ -46,6 +46,7 @@ runs:
         STORAGE_REGION: ${{ inputs.storage-region }}
         SRC_ROOT: ${{ inputs.src-root }}
         BUILD_ROOT: ${{ inputs.build-root }}
+      shell: bash
   #   - uses: actions/setup-node@v3
   #     with:
   #       node-version: 18
