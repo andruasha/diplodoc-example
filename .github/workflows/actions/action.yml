@@ -75,4 +75,4 @@ runs:
         all_objects=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }})
         pr_folders=$(echo "$all_objects" | grep -oE 'pr-[0-9]+/' | sed 's|/$||')
         echo "PR Folders: ${pr_folders}"
-      shell: bash
+      shell: bash 
