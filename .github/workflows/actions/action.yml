@@ -19,8 +19,6 @@ inputs:
 
 runs:
   using: composite
-  env:
-    GH_TOKEN: ${{ secrets.GH_TOKEN }}
   steps:
     - uses: actions/setup-node@v3
       with:
