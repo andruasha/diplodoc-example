@@ -72,6 +72,7 @@ runs:
         aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
         aws configure set default.region ${{ inputs.storage-region }}
         aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
-        folders=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }})
-        echo "Folders: ${folders}"
+        all_objects=$(aws s3 ls s3://mekstack-test/ --recursive --endpoint-url=${{ inputs.storage-endpoint }})
+        pr_folders=$(echo "$all_objects" | grep -oE 'pr-[0-9]+/' | sed 's|/$||')
+        echo "PR Folders: ${pr_folders}"
       shell: bash
