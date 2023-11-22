@@ -22,56 +22,47 @@ inputs:
 runs:
   using: composite
   steps:
-      - name: List pull requests
-        run: gh pr list
-        env:
-          GITHUB_TOKEN: ${{ inputs.github-token }}
-        shell: bash
-    # - uses: actions/setup-node@v3
-    #   with:
-    #     node-version: 18
-    # - run: npm i @diplodoc/cli -g
-    #   shell: bash
-    # - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }}
-    #   shell: bash
-    # - name: Install s3cmd
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install s3cmd
-    #   shell: bash
-    # - name: Upload to S3
-    #   shell: bash
-    #   run: |
-    #     if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-    #       PREFIX="pr-${{ github.event.pull_request.number }}"
-    #     else
-    #       PREFIX="main"
-    #     fi
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm i @diplodoc/cli -g
+      shell: bash
+    - run: yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }}
+      shell: bash
+    - name: Install s3cmd
+      run: |
+        sudo apt-get update
+        sudo apt-get install s3cmd
+      shell: bash
+    - name: Upload to S3
+      shell: bash
+      run: |
+        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          PREFIX="pr-${{ github.event.pull_request.number }}"
+        else
+          PREFIX="main"
+        fi
 
-    #     yfm publish \
-    #       -i "${{ inputs.build-root }}" \
-    #       --endpoint "${{ inputs.storage-endpoint }}" \
-    #       --region "${{ inputs.storage-region }}" \
-    #       --bucket "${{ inputs.storage-bucket }}" \
-    #       --access-key-id "${{ inputs.storage-access-key-id }}" \
-    #       --secret-access-key "${{ inputs.storage-secret-access-key }}" \
-    #       --prefix "${PREFIX}/"
-    # - name: Configure AWS CLI
-    #   run: |
-    #     aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
-    #     aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
-    #     aws configure set default.region ${{ inputs.storage-region }}
-    #     aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
-    #     aws s3 rm s3://mekstack-test/folder/ --recursive --endpoint-url=${{ inputs.storage-endpoint }}
-    #   shell: bash
-    # - name: Remove unnecessary folders
-    #   run: |
-    #     FOLDERS=$(aws s3 ls s3://"${{ inputs.storage-bucket }}"/ --recursive --endpoint-url=${{ inputs.storage-endpoint }} | awk -F'/' '{print $2}' | uniq)
-    #     OPEN_PRS=$(gh pr list --json number,state -q "is:open" | jq -r '.[].number')
-    #     for FOLDER in $FOLDERS; do
-    #       PR_NUMBER=$(echo $FOLDER | cut -d'-' -f2)
-    #       if [[ ! " $OPEN_PRS " =~ " $PR_NUMBER " ]]; then
-    #         aws s3 rm s3://"${{ inputs.storage-bucket }}"/"${FOLDER}" --recursive --endpoint-url=${{ inputs.storage-endpoint }}
-    #       fi
-    #     done
-    #   shell: bash
+        yfm publish \
+          -i "${{ inputs.build-root }}" \
+          --endpoint "${{ inputs.storage-endpoint }}" \
+          --region "${{ inputs.storage-region }}" \
+          --bucket "${{ inputs.storage-bucket }}" \
+          --access-key-id "${{ inputs.storage-access-key-id }}" \
+          --secret-access-key "${{ inputs.storage-secret-access-key }}" \
+          --prefix "${PREFIX}/"
+    - name: Configure AWS CLI
+      run: |
+        aws configure set aws_access_key_id ${{ inputs.storage-access-key-id }}
+        aws configure set aws_secret_access_key ${{ inputs.storage-secret-access-key }}
+        aws configure set default.region ${{ inputs.storage-region }}
+        aws configure set default.s3.endpoint_url ${{ inputs.storage-endpoint }}
+        aws s3 rm s3://mekstack-test/folder/ --recursive --endpoint-url=${{ inputs.storage-endpoint }}
+      shell: bash
+    - name: List pull request IDs
+      run: |
+        ids=$(gh pr list | awk '{print $1}')
+        echo "Pull request IDs: $ids"
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      shell: bash
