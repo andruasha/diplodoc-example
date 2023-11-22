@@ -2,6 +2,8 @@ name: docs-build-action
 description: Build & Upload documentation
 
 inputs:
+  github-token:
+    required: true
   storage-bucket:
     required: true
   storage-endpoint:
@@ -23,7 +25,7 @@ runs:
       - name: List pull requests
         run: gh pr list
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.github-token }}
     # - uses: actions/setup-node@v3
     #   with:
     #     node-version: 18
