@@ -20,15 +20,16 @@ inputs:
 runs:
   using: composite
   steps:
-      - name: List Pull Requests
-        run: |
-          TOKEN=$GITHUB_TOKEN
-          REPO_OWNER=$GITHUB_REPOSITORY_OWNER
-          REPO_NAME=$GITHUB_REPOSITORY
+    - name: List Pull Requests
+      run: |
+        TOKEN=$GITHUB_TOKEN
+        REPO_OWNER=$GITHUB_REPOSITORY_OWNER
+        REPO_NAME=$GITHUB_REPOSITORY
 
-          curl -s -H "Authorization: Bearer $TOKEN" \
-            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/pulls?state=open" \
-            | jq '.[] | .title, .user.login'
+        curl -s -H "Authorization: Bearer $TOKEN" \
+          "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/pulls?state=open" \
+          | jq '.[] | .title, .user.login'
+
     # - uses: actions/setup-node@v3
     #   with:
     #     node-version: 18
