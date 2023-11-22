@@ -26,6 +26,7 @@ runs:
         run: gh pr list
         env:
           GITHUB_TOKEN: ${{ inputs.github-token }}
+        shell: bash
     # - uses: actions/setup-node@v3
     #   with:
     #     node-version: 18
