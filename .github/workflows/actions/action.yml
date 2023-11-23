@@ -44,7 +44,7 @@ runs:
         if [[ "${{ github.event_name }}" == "pull_request" ]]; then
           PREFIX="pr-${{ github.event.pull_request.number }}"
         else
-          PREFIX="${{ github.ref_slug }}"
+          PREFIX="${{ github.head_ref }}"
         fi
         yfm publish \
           -i "${{ inputs.build-root }}" \
