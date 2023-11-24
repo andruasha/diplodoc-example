@@ -63,7 +63,7 @@ runs:
           COMMENT="Документация доступна по ссылке: [${DOCS_URL}](${DOCS_URL})"
           GITHUB_API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
           
-          curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          curl -s -H "Authorization: Bearer ${{ inputs.github-token }}" \
                -X POST \
                -d '{"body": "'"$COMMENT"'"}' \
                "$GITHUB_API_URL"
