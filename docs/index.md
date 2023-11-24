@@ -1,5 +1,6 @@
 # Welcome to mekstack docs!
 
+TEST
 
 Отзыв настоящего живого пользователя mekstack:
 
