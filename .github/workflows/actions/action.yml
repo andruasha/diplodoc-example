@@ -64,7 +64,7 @@ runs:
         echo "API URL: $GITHUB_API_URL"
         echo "Comment: $COMMENT"
         
-        curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        curl -s -H "Authorization: Bearer ${{ inputs.github-token }}" \
              -X POST \
              -d '{"body": "'"$COMMENT"'"}' \
              "$GITHUB_API_URL"
