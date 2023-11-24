@@ -54,7 +54,20 @@ runs:
           --access-key-id "${{ inputs.storage-access-key-id }}" \
           --secret-access-key "${{ inputs.storage-secret-access-key }}" \
           --prefix "${PREFIX}/"
-
+    - name: Debug API Request
+      run: |
+        PR_NUMBER="${{ github.event.pull_request.number }}"
+        DOCS_URL="https://pr-${PR_NUMBER}.docs.mekstack.ru"
+        COMMENT="Документация доступна по ссылке: [${DOCS_URL}](${DOCS_URL})"
+        GITHUB_API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
+        
+        echo "API URL: $GITHUB_API_URL"
+        echo "Comment: $COMMENT"
+        
+        curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+             -X POST \
+             -d '{"body": "'"$COMMENT"'"}' \
+             "$GITHUB_API_URL"
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
