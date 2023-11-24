@@ -25,7 +25,7 @@ mekstack/docs/docs
     |-- heat-quick-start.yaml (Манифест для разворачивания виртуалок)
 ```
 
-Если нужно что-то добавить, то открываем нужный .md файл, редактируем его в синтаксисе MarkDown и создаем Pull Request. После, получившаяся документация появится на `pr-#.docs.mekstack.ru` где #-номер вашего Pull Request'a. После ревизии и merg'a изменения появятся на `master.docs.mekstack.ru`
+Если нужно что-то добавить, то открываем нужный .md файл, редактируем его в синтаксисе MarkDown и создаем Pull Request. После, в комментарии к вашему Pull Request'у появится ссылка на получившуюся документацию вида `pr-#.docs.mekstack.ru` где #-номер вашего Pull Request'a. После ревизии и merg'a владельцем изменения появятся на `docs.mekstack.ru`.
 
 
 # Настройка S3
@@ -43,3 +43,12 @@ mekstack/docs/docs
         - **DIPLODOC_STORAGE_BUCKET** со значением имени бакета, которое вы указали на этапе создания бакета
         - DIPLODOC_STORAGE_ENDPOINT со значением `https://storage.yandexcloud.net`
         - DIPLODOC_STORAGE_REGION со значением `ru-central1`
+
+
+# CI/CD
+Сборка документации, выгрузка на S3 и ее хостинг автоматизированы. Все пайплайны, выполняющие это расположены в [*.github/workflows*](./.github/workflows/). Для их нормального функционирования, в настройках репозитория должны быть добавлены следующие:
+- Секреты:
+    - **DIPLODOC_ACCESS_KEY_ID**
+    - **DIPLODOC_SECRET_ACCESS_KEY**
+    - **GH_TOKEN**
+> GitHub токен можно создать в Profile -> Settings -> Developer settings -> Personal access tokens -> Tokens (classic). Жмем Generate new token (classic). Указываем любое имя и в scopes выбираем только подпункты `repo:status` и `public_repo`, так как это минимально необходимые права для того чтобы пайплайн мог по API запросить список всех активных Pull Request'ов и писать комментарий к Pull Request'у с ссылкой на документацию.
