@@ -55,16 +55,23 @@ runs:
           --secret-access-key "${{ inputs.storage-secret-access-key }}" \
           --prefix "${PREFIX}/"
 
-    - name: Pull request artifacts
+    - name: Debug API Request
       if: github.event_name == 'pull_request'
-      uses: gavv/pull-request-artifacts@v2
-      with:
-        repo-token: ${{ inputs.github-token }}
-        commit: ${{ github.event.pull_request.head.sha }}
-        comment-title: "Docs"
-        comment-message: "Документация доступна по ссылке: https://pr-${{ github.event.pull_request.number }}.docs.mekstack.ru"
-        artifacts: |
-          README.md
+      shell: bash
+      run: |
+        PR_NUMBER="${{ github.event.pull_request.number }}"
+        DOCS_URL="https://pr-${PR_NUMBER}.docs.mekstack.ru"
+        COMMENT="Документация доступна по ссылке: [${DOCS_URL}](${DOCS_URL})"
+        GITHUB_API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
+        
+        echo "API URL: $GITHUB_API_URL"
+        echo "Comment: $COMMENT"
+        
+        curl -s -H "Authorization: Bearer ${{ inputs.github-token }}" \
+             -X POST \
+             -d '{"body": "'"$COMMENT"'"}' \
+             "$GITHUB_API_URL"
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
