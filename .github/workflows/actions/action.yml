@@ -60,11 +60,8 @@ runs:
       with:
         commit: ${{ github.event.pull_request.head.sha }}
         repo-token: ${{ inputs.github-token }}
-        artifacts-branch: artifacts
-        comment-title: "Ссылка на документацию"
-        comment-style: raw
-        artifacts: |
-          Документация доступна по ссылке: https://pr-${{ github.event.pull_request.number }}.docs.mekstack.ru
+        comment-title: "Docs"
+        comment-message: "Документация доступна по ссылке: https://pr-${{ github.event.pull_request.number }}.docs.mekstack.ru"
     
     - name: Debug API Request
       shell: bash
