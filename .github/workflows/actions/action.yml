@@ -58,7 +58,7 @@ runs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 'latest'
 
     - name: Install dependencies
       run: |
@@ -81,7 +81,7 @@ runs:
       env:
         PR_NUMBER: ${{ github.event.pull_request.number }}
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        GITHUB_REPO: ${{ github.repository }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
 
     - name: Delete catalogs with closed pull-request
       run: python .github/workflows/scripts/main.py
