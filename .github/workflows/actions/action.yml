@@ -55,6 +55,8 @@ runs:
           --secret-access-key "${{ inputs.storage-secret-access-key }}" \
           --prefix "${PREFIX}/"
 
+
+
     - name: Debug API Request
       if: github.event_name == 'pull_request'
       shell: bash
@@ -80,10 +82,18 @@ runs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install awscli boto3 PyGithub
+        pip install boto3 PyGithub
       shell: bash
 
-    - name: Run Python script
+    - name: Add a comment to pull-request
+      run: python .github/workflows/scripts/comment.py
+      env:
+        PR_NUMBER: "${{ github.event.pull_request.number }}"
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GITHUB_REPO: ${{ github.repository }}
+      shell: bash
+
+    - name: Delete catalogs with closed pull-request
       run: python .github/workflows/scripts/main.py
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
