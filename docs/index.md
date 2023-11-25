@@ -1,6 +1,6 @@
 # Welcome to mekstack docs!
 
-MASTER
+PR-35
 
 Отзыв настоящего живого пользователя mekstack:
 
