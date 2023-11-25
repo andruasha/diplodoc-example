@@ -1,6 +1,6 @@
 # Welcome to mekstack docs!
 
-TEST2
+MASTER
 
 Отзыв настоящего живого пользователя mekstack:
 
