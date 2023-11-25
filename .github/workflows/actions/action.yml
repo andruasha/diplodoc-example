@@ -62,14 +62,8 @@ runs:
         repo-token: ${{ inputs.github-token }}
         comment-title: "Docs"
         comment-message: "Документация доступна по ссылке: https://pr-${{ github.event.pull_request.number }}.docs.mekstack.ru"
-    
-    - name: Debug API Request
-      shell: bash
-      run: |
-        PR_NUMBER="${{ github.event.pull_request.number }}"
-        DOCS_URL="https://pr-${PR_NUMBER}.docs.mekstack.ru"
-        COMMENT="Документация доступна по ссылке: [${DOCS_URL}](${DOCS_URL})"
-
+        artifacts: |
+          README.md
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
