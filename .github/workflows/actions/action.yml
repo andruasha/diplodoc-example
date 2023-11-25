@@ -60,15 +60,23 @@ runs:
         PR_NUMBER="${{ github.event.pull_request.number }}"
         DOCS_URL="https://pr-${PR_NUMBER}.docs.mekstack.ru"
         COMMENT="Документация доступна по ссылке: [${DOCS_URL}](${DOCS_URL})"
-        GITHUB_API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
+        # GITHUB_API_URL="https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments"
         
-        echo "API URL: $GITHUB_API_URL"
-        echo "Comment: $COMMENT"
+        # echo "API URL: $GITHUB_API_URL"
+        # echo "Comment: $COMMENT"
+
+        curl -L \
+          -X PATCH \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ inputs.github-token }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/OWNER/REPO/issues/comments/COMMENT_ID \
+          -d '{"body":"'"$COMMENT"'"}
         
-        curl -s -H "Authorization: Bearer ${{ inputs.github-token }}" \
-             -X POST \
-             -d '{"body": "'"$COMMENT"'"}' \
-             "$GITHUB_API_URL"
+        # curl -s -H "Authorization: Bearer ${{ inputs.github-token }}" \
+        #      -X POST \
+        #      -d '{"body": "'"$COMMENT"'"}' \
+        #      "$GITHUB_API_URL"
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
